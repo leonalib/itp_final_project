@@ -22,7 +22,9 @@ def additional_btns(message):
         reply_markup=markup
     )
 
+register_admin_handlers(bot)
 register_handlers(bot, user_data)
 
+print("🎂 Cake Bot started!")
 bot.polling(non_stop=True)
 
