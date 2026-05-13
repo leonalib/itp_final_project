@@ -7,7 +7,6 @@ bot = telebot.TeleBot('7995858623:AAEN41vp-1wedmDzRBK5OfN8HA6-EhZUycU')
 user_data = {}
 
 create_table()
-register_handlers(bot, user_data)
 
 @bot.message_handler(commands=['start', 'hello'])
 def additional_btns(message):
@@ -22,6 +21,8 @@ def additional_btns(message):
         f"Start by choosing a flavor 👇",
         reply_markup=markup
     )
+
+register_handlers(bot, user_data)
 
 bot.polling(non_stop=True)
 
