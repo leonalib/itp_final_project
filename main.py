@@ -2,11 +2,14 @@ import telebot
 from config import TOKEN
 from database import create_table
 from handlers import register_handlers
+from admin import register_admin_handlers  
 
 bot = telebot.TeleBot('7995858623:AAEN41vp-1wedmDzRBK5OfN8HA6-EhZUycU')
 user_data = {}
 
 create_table()
+
+register_admin_handlers(bot) 
 
 @bot.message_handler(commands=['start', 'hello'])
 def additional_btns(message):
@@ -22,9 +25,7 @@ def additional_btns(message):
         reply_markup=markup
     )
 
-register_admin_handlers(bot)
+
 register_handlers(bot, user_data)
 
-print("🎂 Cake Bot started!")
 bot.polling(non_stop=True)
-

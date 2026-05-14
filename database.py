@@ -65,86 +65,53 @@ def save_order(chat_id, username, flavor, size, photo_id, extras):
 
 # ── Admin reads ───────────────────────────────────────────────
 
-def get_orders(status_filter=None, limit=20):
-    """Return a list of orders, optionally filtered by status."""
+def get_orders(status_filter=None):
     conn = get_connection()
     cur = conn.cursor()
     if status_filter:
-        cur.execute("""
-            SELECT id, chat_id, username, flavor, size, photo_id, extras, status, created_at
-            FROM orders
-            WHERE status = %s
-            ORDER BY created_at DESC
-            LIMIT %s
-        """, (status_filter, limit))
+        cur.execute("SELECT id, chat_id, username, flavor, size, photo_id, extras, status, created_at FROM orders WHERE status = %s ORDER BY created_at DESC", (status_filter,))
     else:
-        cur.execute("""
-            SELECT id, chat_id, username, flavor, size, photo_id, extras, status, created_at
-            FROM orders
-            ORDER BY created_at DESC
-            LIMIT %s
-        """, (limit,))
+        cur.execute("SELECT id, chat_id, username, flavor, size, photo_id, extras, status, created_at FROM orders ORDER BY created_at DESC")
     rows = cur.fetchall()
     conn.close()
     return rows
 
-
 def get_order_by_id(order_id):
-    """Return a single order row or None."""
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT id, chat_id, username, flavor, size, photo_id, extras, status, created_at
-        FROM orders
-        WHERE id = %s
-    """, (order_id,))
+    cur.execute("SELECT id, chat_id, username, flavor, size, photo_id, extras, status, created_at FROM orders WHERE id = %s", (order_id,))
     row = cur.fetchone()
     conn.close()
     return row
 
-
 def update_order_status(order_id, new_status):
-    """Update status and return (chat_id, flavor) for customer notification."""
     conn = get_connection()
     cur = conn.cursor()
-    try:
-        cur.execute("""
-            UPDATE orders SET status = %s WHERE id = %s
-            RETURNING chat_id, flavor
-        """, (new_status, order_id))
-        result = cur.fetchone()
-        conn.commit()
-        return result            # (chat_id, flavor) or None
-    except Exception as e:
-        conn.rollback()
-        print(f"DB Error (update_status): {e}")
-        return None
-    finally:
-        conn.close()
-
+    cur.execute("UPDATE orders SET status = %s WHERE id = %s RETURNING chat_id, flavor", (new_status, order_id))
+    result = cur.fetchone()
+    conn.commit()
+    conn.close()
+    return result
 
 def get_stats():
-    """Return order counts by status plus weekly/monthly totals."""
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
         SELECT
-            COUNT(*) FILTER (WHERE status = 'new')         AS new_count,
-            COUNT(*) FILTER (WHERE status = 'in_progress') AS in_progress,
-            COUNT(*) FILTER (WHERE status = 'ready')       AS ready,
-            COUNT(*) FILTER (WHERE status = 'delivered')   AS delivered,
-            COUNT(*) FILTER (WHERE status = 'cancelled')   AS cancelled,
-            COUNT(*)                                        AS total
+            COUNT(*) FILTER (WHERE status = 'new'),
+            COUNT(*) FILTER (WHERE status = 'in_progress'),
+            COUNT(*) FILTER (WHERE status = 'ready'),
+            COUNT(*) FILTER (WHERE status = 'delivered'),
+            COUNT(*) FILTER (WHERE status = 'cancelled'),
+            COUNT(*)
         FROM orders
     """)
     counts = cur.fetchone()
-
     cur.execute("""
         SELECT
-            COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '7 days')  AS week,
-            COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '30 days') AS month
+            COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '7 days'),
+            COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '30 days')
         FROM orders
-        WHERE status != 'cancelled'
     """)
     periods = cur.fetchone()
     conn.close()
