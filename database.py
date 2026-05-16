@@ -40,8 +40,6 @@ def create_table():
     conn.close()
 
 
-# ── Client writes ─────────────────────────────────────────────
-
 def save_order(chat_id, username, flavor, size, photo_id, extras):
     """Insert a new order and return its id, or None on failure."""
     conn = get_connection()
@@ -62,8 +60,6 @@ def save_order(chat_id, username, flavor, size, photo_id, extras):
     finally:
         conn.close()
 
-
-# ── Admin reads ───────────────────────────────────────────────
 
 def get_orders(status_filter=None):
     conn = get_connection()
