@@ -18,6 +18,7 @@ CakeHelper is a Telegram-based ordering system for a custom cake bakery. Custome
 - Add extras (inscription, allergies, special wishes)
 - Review an order summary before confirming
 - Receive automatic status updates at every stage (In Progress → Ready → Delivered)
+
 **Admin Side:**
 - Instant notification on every new order with photo and details
 - One-click Accept or Decline buttons on new orders
@@ -99,6 +100,24 @@ Order is saved into the database
 Admin manages the order status
 
 ## Screenshots
+<img width="1280" height="988" alt="f2bfb444-1557-4a24-b3c3-90213dfcc454" src="https://github.com/user-attachments/assets/ca71f417-2118-4fd5-9d8d-3f235423c910" />
+
+## Main Menu
+Main interface where users start ordering cakes.
+<img width="1280" height="973" alt="5b75c3bf-877e-49ee-93b5-94932b0d0ad5" src="https://github.com/user-attachments/assets/97beff37-4074-4b0f-9118-394554ed9c8d" />
+
+## Cake Selection
+Users choose cake flavor, size, and extras.
+
+<img width="1280" height="832" alt="68e89cfb-636b-4f81-ac20-e4d353ac0848" src="https://github.com/user-attachments/assets/cf2f5d50-bcab-404b-8712-845bce7e1e0c" />
+
+## Admin Panel
+Admin interface for managing customer orders and statuses.
+
+<img width="1280" height="832" alt="02e282c4-b203-4f69-8780-a3881e5088ea" src="https://github.com/user-attachments/assets/b2d40b10-b2c8-41e2-a607-0f37f8de2459" />
+
+## Database Table
+PostgreSQL table storing all order information.
 
 
 #  Team Member Roles
