@@ -36,17 +36,7 @@ CakeHelper is a Telegram-based ordering system for a custom cake bakery. Custome
 | pyTeleBot (telebot) | Telegram Bot API wrapper |
 | PostgreSQL | Order database |
 | psycopg2 | PostgreSQL driver for Python |
- 
----
-##  Installation
- 
-**Requirements:**
-- Python 3.9 or higher
-- PostgreSQL installed and running
-- A Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
-
----
-##  Project Structure
+ ##  Project Structure
  
 ```
 cakebot/
@@ -58,6 +48,15 @@ cakebot/
 └── README.md
 ```
  
+---
+##  Installation
+ 
+**Requirements:**
+- Python 3.9 or higher
+- PostgreSQL installed and running
+- A Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
+
+---
 ---
 ## Installation Instructions
 # Step 1 — Clone the repository
