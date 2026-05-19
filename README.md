@@ -1,145 +1,268 @@
-#  CakeHelper — Telegram Cake Order Bot
- 
-A Telegram bot that lets customers order custom cakes step by step, and gives admins a full management panel to track, update, and communicate on every order.
- 
----
- 
-##  Project Description
- 
-CakeHelper is a Telegram-based ordering system for a custom cake bakery. Customers can choose a flavor, size, upload a design photo, and add special requests — all without leaving Telegram. Admins receive instant notifications for each new order and can manage the entire order lifecycle from a dedicated admin panel.
----
- 
-##  Features
- 
-**Customer Side:**
-- Choose from preset cake flavors (Chocolate, Vanilla, Red Velvet, Honey, Berry) or enter a custom flavor
-- Choose size (Small / Medium / Large / Custom)
-- Upload a reference photo of the desired cake design
-- Add extras (inscription, allergies, special wishes)
-- Review an order summary before confirming
-- Receive automatic status updates at every stage (In Progress → Ready → Delivered)
+#  CakeHelper — Telegram Cake Order Bot (OOP Version)
 
-**Admin Side:**
-- Instant notification on every new order with photo and details
-- One-click Accept or Decline buttons on new orders
-- Admin panel with order lists filtered by status (New / In Progress / Ready / All)
-- Detailed order view with status advancement controls
-- Cancel any active order from the detail view
-- Direct "Message Customer" link in each order
-- Statistics dashboard: counts by status, last 7 days, last 30 days
+A Telegram-based cake ordering bot with **Object-Oriented Architecture, PostgreSQL database, and admin management system**.
+
 ---
-## Technologies Used
- 
-| Technology | Purpose |
-|---|---|
-| Python 3 | Core language |
-| pyTeleBot (telebot) | Telegram Bot API wrapper |
-| PostgreSQL | Order database |
-| psycopg2 | PostgreSQL driver for Python |
- ##  Project Structure
- 
+
+##  Project Description
+
+CakeHelper is a Telegram bot that allows customers to order custom cakes step-by-step without leaving Telegram.
+
+The project was redesigned using **OOP principles (Object-Oriented Programming)** to improve structure, scalability, and maintainability.
+
+Customers can:
+
+* choose cake options
+* upload design photos
+* add special requests
+* confirm orders
+
+Admins can:
+
+* manage orders
+* update order status
+* view statistics
+* communicate with customers
+
+---
+
+##  Features
+
+###  Customer Side
+
+* 🍰 Choose cake flavor (Chocolate, Vanilla, Red Velvet, Honey, Berry, Custom)
+* 📏 Select size (Small / Medium / Large / Custom)
+* 📸 Upload cake design image
+* ✏️ Add extras (messages, allergies, notes)
+* 📋 Order summary before confirmation
+* 🔔 Automatic status updates
+
+---
+
+###  Admin Side
+
+* 📩 Instant notifications for new orders
+* ✅ Accept / ❌ Decline orders
+* 🔧 Manage order status (New → In Progress → Ready → Delivered)
+* 📊 Statistics dashboard
+* 👤 View full order details
+* 💬 Direct message to customer
+
+---
+
+##  OOP Architecture 
+
+The system is built using Object-Oriented Programming.
+
+###  Core Classes
+
+**BaseOrder**
+
+* Stores common order data
+* Handles status management
+* Provides serialization (to_dict / from_dict)
+
+**CakeOrder (inherits BaseOrder)**
+
+* Cake-specific fields:
+
+  * flavor
+  * size
+  * photo_id
+  * extras
+
+**CustomOrder (inherits CakeOrder)**
+
+* Extended order type
+* Adds manual review flag
+
+---
+
+###  Design Patterns
+
+**Factory Pattern**
+
+* OrderFactory creates correct order type automatically
+
+**Repository Pattern**
+
+* OrderRepository handles:
+
+  * JSON backup
+  * CSV export/import
+
+---
+
+##  Database (PostgreSQL)
+
+### Orders Table
+
+* id
+* chat_id
+* username
+* flavor
+* size
+* photo_id
+* extras
+* status
+* created_at
+
+---
+
+##  System Workflow
+
+1. User starts bot (/start)
+2. User selects cake flavor
+3. User selects size
+4. User uploads image
+5. User adds extras
+6. System creates `CakeOrder` object (OOP layer)
+7. Order is saved in PostgreSQL
+8. (Optional) backup saved in JSON/CSV
+9. Admin receives notification
+10. Admin updates order status
+11. User receives updates
+
+---
+
+##  Technologies Used
+
+| Technology           | Purpose                   |
+| -------------------- | ------------------------- |
+| Python 3             | Core programming language |
+| pyTelegramBotAPI     | Telegram bot framework    |
+| PostgreSQL           | Database                  |
+| psycopg2             | Database connection       |
+| OOP (Python Classes) | System architecture       |
+| JSON / CSV           | Backup & export system    |
+
+---
+
+##  Project Structure
+
 ```
-cakebot/
-├── main.py        # Entry point — starts the bot
-├── config.py      # Token, admin IDs, DB credentials
-├── database.py    # All database functions (save, get, update, stats)
-├── handlers.py    # Customer-facing conversation flow
-├── admin.py       # Admin panel, callbacks, status management
+Cake_Helper/
+├── main.py              # Bot entry point
+├── config.py            # Token + DB settings
+├── handlers.py          # Customer interaction logic
+├── admin.py             # Admin panel logic
+├── database.py          # PostgreSQL functions
+├── models.py            # OOP models (NEW)
+│   ├── BaseOrder
+│   ├── CakeOrder
+│   ├── CustomOrder
+│   ├── OrderFactory
+│   └── OrderRepository
 └── README.md
 ```
- 
----
-##  Installation
- 
-**Requirements:**
-- Python 3.9 or higher
-- PostgreSQL installed and running
-- A Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
 
 ---
----
-## Installation Instructions
-# Step 1 — Clone the repository
-git clone <repository_link>
+
+##  How to Run
+
+### 1. Clone repository
+
+```bash
+git clone <repo_link>
 cd Cake_Helper
-# Step 2 — Install Python dependencies
+```
+
+### 2. Install dependencies
+
+```bash
 pip install pyTelegramBotAPI psycopg2-binary
-# Step 3 — Create the PostgreSQL database
+```
+
+### 3. Create database
+
+```sql
 CREATE DATABASE "Cake_Helper";
-## Step 4 — Configure config.py
-TOKEN = 'YOUR_BOT_TOKEN'
-ADMIN_IDS = [YOUR_TELEGRAM_USER_ID]
+```
+
+### 4. Configure config.py
+
+```python
+TOKEN = "YOUR_BOT_TOKEN"
+ADMIN_IDS = [YOUR_TELEGRAM_ID]
 
 DB_NAME = "Cake_Helper"
 DB_USER = "postgres"
 DB_PASSWORD = "your_password"
 DB_HOST = "localhost"
-## How to Run
+```
+
+### 5. Run bot
+
+```bash
 python main.py
-
-After launch, the bot will:
-
-1.Connect to the PostgreSQL database
-
-2.Create the orders table if it does not exist
-
-3.Register customer and admin handlers
-
-4.Start polling Telegram messages
-
-### Open Telegram, find your bot, and send:
-
-/start
-## Example Workflow
-User starts the bot
-User chooses cake flavor
-User selects cake size
-User uploads a cake photo
-Order is saved into the database
-Admin manages the order status
-
-## Screenshots
-<img width="1280" height="988" alt="f2bfb444-1557-4a24-b3c3-90213dfcc454" src="https://github.com/user-attachments/assets/ca71f417-2118-4fd5-9d8d-3f235423c910" />
-
-## Main Menu
-Main interface where users start ordering cakes.
-<img width="1280" height="973" alt="5b75c3bf-877e-49ee-93b5-94932b0d0ad5" src="https://github.com/user-attachments/assets/97beff37-4074-4b0f-9118-394554ed9c8d" />
-
-## Cake Selection
-Users choose cake flavor, size, and extras.
-
-<img width="1280" height="832" alt="68e89cfb-636b-4f81-ac20-e4d353ac0848" src="https://github.com/user-attachments/assets/cf2f5d50-bcab-404b-8712-845bce7e1e0c" />
-
-## Admin Panel
-Admin interface for managing customer orders and statuses.
-
-<img width="1280" height="832" alt="02e282c4-b203-4f69-8780-a3881e5088ea" src="https://github.com/user-attachments/assets/b2d40b10-b2c8-41e2-a607-0f37f8de2459" />
-
-## Database Table
-PostgreSQL table storing all order information.
-
-
-#  Team Member Roles
-
-##  Aruzhan Manatova
-- Admin panel development
-- Bot design and interface
-- Documentation and README preparation
-
-##  Aisha Yerkinbek
-- Customer flow development
-- Telegram bot functionality
-- Database integration
+```
 
 ---
 
-#  Testing and Debugging
+##  Testing & Debugging
 
-Testing and debugging were completed collaboratively by all team members.
+* Manual testing via Telegram bot
+* Admin panel verification
+* PostgreSQL database checks
+* JSON/CSV backup validation
 
-### Future Improvements
-- Online payment system
-- Delivery tracking
-- More cake customization
-- Multi-language support
+---
+
+##  Future Improvements
+
+* 💳 Payment system integration
+* 📍 Delivery tracking
+* 🌍 Multi-language support
+* 📱 Web dashboard for admins
+* 📊 Advanced analytics system
+
+---
+## Screenshots
+<img width="1280" height="988" alt="5366cf82-2a3f-40b3-b79a-830603137b96" src="https://github.com/user-attachments/assets/79a5050f-f659-46cb-9e22-af211fe047d9" />
+
+### Main Menu
+
+This is the starting interface of the bot where users can begin the cake ordering process by selecting options from inline buttons.
+
+<img width="1280" height="973" alt="ecd6937d-66e5-4ca2-981e-dcd391eb48b0" src="https://github.com/user-attachments/assets/2d2a67df-c742-4568-a632-64459decb336" />
+
+### Order Flow
+
+This section shows the step-by-step ordering process, including flavor selection, size selection, and additional preferences.
+
+<img width="1280" height="832" alt="f06fe535-f111-4d65-82a2-78a8b02e6006" src="https://github.com/user-attachments/assets/fa5473b8-7879-4f99-a3d0-896f0fc53dad" />
+
+### Admin Panel
+
+This interface is used by administrators to manage orders, update statuses, and control the order workflow.
+
+<img width="1280" height="832" alt="fc09ba6d-776b-4624-966e-0a375df56846" src="https://github.com/user-attachments/assets/b09a295c-6632-48ca-b535-5d199a4bf075" />
+
+### Database
+
+This screenshot shows the PostgreSQL orders table where all customer orders are stored and managed.
+
+##  Team Members
+
+###  Aruzhan Manatova
+* Developed the admin panel for order management
+* Worked on project documentation
+* Participated in the OOP module implementation
+* Contributed to bot design and interface development
+###  Aisha Yerkinbek
+* Developed the customer flow in the Telegram bot
+* Worked with the database module
+* Participated in the OOP module implementation
+* Assisted in testing and debugging
+---
+
+##  Latest Update
+
+The project was upgraded from a procedural bot to a **fully OOP-based system** with:
+
+* Object-Oriented classes
+* Factory Pattern
+* Repository Pattern
+* JSON/CSV persistence layer
+* Improved architecture and scalability
 
