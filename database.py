@@ -14,8 +14,6 @@ def get_connection():
 def create_table():
     conn = get_connection()
     cur = conn.cursor()
-
-    # Main orders table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS orders (
             id         SERIAL PRIMARY KEY,
@@ -29,8 +27,6 @@ def create_table():
             created_at TIMESTAMP DEFAULT NOW()
         )
     """)
-
-    # Add status column if the table already existed without it
     cur.execute("""
         ALTER TABLE orders
         ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'new'
@@ -41,7 +37,6 @@ def create_table():
 
 
 def save_order(chat_id, username, flavor, size, photo_id, extras):
-    """Insert a new order and return its id, or None on failure."""
     conn = get_connection()
     cur = conn.cursor()
     try:
@@ -52,11 +47,11 @@ def save_order(chat_id, username, flavor, size, photo_id, extras):
         """, (chat_id, username, flavor, size, photo_id, extras))
         order_id = cur.fetchone()[0]
         conn.commit()
-        return order_id          # truthy on success
+        return order_id        
     except Exception as e:
         conn.rollback()
         print(f"DB Error (save_order): {e}")
-        return None              # falsy on failure
+        return None            
     finally:
         conn.close()
 
