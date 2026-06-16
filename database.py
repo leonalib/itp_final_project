@@ -4,10 +4,10 @@ from config import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST
 
 def get_connection():
     return psycopg2.connect(
-        dbname="Cake_Helper",
-        user="postgres",
-        password="1234",
-        host="localhost",
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
         client_encoding="UTF8"
     )
 
