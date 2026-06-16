@@ -92,6 +92,9 @@ def send_admin_menu(bot, chat_id):
     markup.add(
         types.InlineKeyboardButton('📊 Statistics',   callback_data='adm_stats'),
     )
+    markup.add(
+    types.InlineKeyboardButton('📥 Export CSV', callback_data='adm_export'),
+)
     bot.send_message(
         chat_id,
         "👑 *Admin Panel — Cake Orders*\n\nChoose a view:",
@@ -259,6 +262,18 @@ def register_admin_handlers(bot):
 
         elif data == 'adm_stats':
             show_stats(bot, chat_id)
+
+        elif data == 'adm_export':
+            import io, csv
+            orders = get_orders()
+            output = io.StringIO()
+            writer = csv.writer(output)
+            writer.writerow(['ID', 'Chat ID', 'Username', 'Flavor', 'Size', 'Photo', 'Extras', 'Status', 'Created At'])
+            writer.writerows(orders)
+            output.seek(0)
+            file = io.BytesIO(output.getvalue().encode('utf-8'))
+            file.name = 'orders.csv'
+            bot.send_document(chat_id, file, caption="📊 Список заказов")
 
         elif data.startswith('adm_list_'):
             status = data.replace('adm_list_', '')
