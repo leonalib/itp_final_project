@@ -1,4 +1,4 @@
-TOKEN = '7995858623:AAEN41vp-1wedmDzRBK5OfN8HA6-EhZUycU'
+TOKEN = os.environ.get("BOT_TOKEN")
 ADMIN_IDS = [8419513332]
 
 DB_NAME = "Cake_Helper"

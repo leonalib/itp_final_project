@@ -4,7 +4,7 @@ from database import create_table
 from handlers import register_handlers
 from admin import register_admin_handlers  
 
-bot = telebot.TeleBot('7995858623:AAEN41vp-1wedmDzRBK5OfN8HA6-EhZUycU')
+bot = telebot.TeleBot(TOKEN)
 user_data = {}
 
 create_table()
@@ -29,3 +29,5 @@ def additional_btns(message):
 register_handlers(bot, user_data)
 
 bot.polling(non_stop=True)
+
+# pyTelegramBotAPI and psycopg2ч
